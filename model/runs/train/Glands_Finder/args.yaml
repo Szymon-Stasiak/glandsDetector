@@ -1,7 +1,7 @@
 task: detect
 mode: train
 model: yolo11n.pt
-data: ../preprocessedData/LearnSet145/data.yaml
+data: ../preprocessedData/LearnSet/dataAugumented.yaml
 epochs: 50
 time: null
 patience: 100
