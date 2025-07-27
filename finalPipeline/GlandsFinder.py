@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 from PIL import Image
 
+
 def detect_on_tiles(tiles, positions, model):
     all_detections = []
     for tile, (x_offset, y_offset) in zip(tiles, positions):
@@ -125,7 +126,7 @@ def tile_image_with_detection(image, tile_size, overlap, model):
             y_end = min(y + tile_size, h)
             tile = image[y:y_end, x:x_end]
             tiles.append(tile)
-            results = model(tile, conf=0.9)[0]
+            results = model(tile, conf=0.1)[0]
             list_of_boxes = []
             for box in results.boxes:
                 x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
@@ -341,7 +342,7 @@ def apply_segmentations_to_image(image, segmentations, color=(0, 255, 0), thickn
     return img_with_segmentations
 
 
-detectionModel = YOLO("../model/saved_models/Glands_Finder_Augumented_Data_best.pt")
+detectionModel = YOLO("../model/saved_models/Glands_Finder_Final_best.pt")
 modelUNET = UNET(img_height=50, img_width=50)
 modelUNET.set_model(in_channels=3, out_channels=1,
                     name="C:/Users/stszy/miniconda3/Lib/site-packages/unet_core/GlandsFinder")
@@ -380,3 +381,4 @@ segmentations = segment_on_tiles(image, unique_detections, modelUNET)
 segmented_image = apply_segmentations_to_image(image, segmentations)
 print("Printing segmented image...")
 cv2.imwrite("segmented.png", segmented_image)
+print("All operations completed successfully!")
