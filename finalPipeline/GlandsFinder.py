@@ -126,7 +126,7 @@ def tile_image_with_detection(image, tile_size, overlap, model):
             y_end = min(y + tile_size, h)
             tile = image[y:y_end, x:x_end]
             tiles.append(tile)
-            results = model(tile, conf=0.1)[0]
+            results = model(tile, conf=0.7)[0]
             list_of_boxes = []
             for box in results.boxes:
                 x1, y1, x2, y2 = box.xyxy[0].cpu().numpy()
@@ -342,10 +342,10 @@ def apply_segmentations_to_image(image, segmentations, color=(0, 255, 0), thickn
     return img_with_segmentations
 
 
-detectionModel = YOLO("../model/saved_models/Glands_Finder_Final_best.pt")
-modelUNET = UNET(img_height=50, img_width=50)
+detectionModel = YOLO("../model/saved_models/Glands_Finder_Final_old_n150_best.pt")
+modelUNET = UNET(img_height=64, img_width=64)
 modelUNET.set_model(in_channels=3, out_channels=1,
-                    name="C:/Users/stszy/miniconda3/Lib/site-packages/unet_core/GlandsFinder")
+                    name="C:/Users/stszy/PycharmProjects/U-Net-neural-network/unet_core/my_checkpoint_epoch_50")
 
 image_path = "../preprocessedData_v1/tissue_regions/1M01/tissue_region_0.tiff"
 tile_size = 2048

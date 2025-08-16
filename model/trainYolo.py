@@ -6,14 +6,14 @@ from ultralytics import YOLO
 import os
 
 
-run_name = "Glands_Finder_Final"
+run_name = "Glands_Finder_Final_old_dataset_150"
 base_path = f"runs/train/{run_name}"
 
-model = YOLO("yolo11x.pt")
+model = YOLO("yolo11n.pt")
 
 model.train(
-    data='../preprocessedData/LearnSet/data.yaml',
-    epochs=50,
+    data='../preprocessedData_v1/LearnSet/dataAugumented.yaml',
+    epochs=150,
     imgsz=640,
     project="runs/train",
     name=run_name,
