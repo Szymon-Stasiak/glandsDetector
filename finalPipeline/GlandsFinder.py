@@ -19,6 +19,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger("segment_cli")
 
+
 def detect_on_tiles(tiles, positions, model):
     all_detections = []
     for tile, (x_offset, y_offset) in zip(tiles, positions):
@@ -355,6 +356,7 @@ def apply_segmentations_to_image(image, segmentations, color=(0, 255, 0), thickn
 
     return img_with_segmentations
 
+
 def save_json_list(path: Path, list_obj):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w") as f:
@@ -416,15 +418,22 @@ def save_segmentation_images(output_dir: Path, image, segmentations):
         saved += 1
     logger.info(f"Saved {saved} segmentation image(s) to {out}")
 
+
 def main():
     parser = argparse.ArgumentParser(description="Detection + segmentation CLI with flexible save flags")
-    parser.add_argument("-f", "--file", required=False, help="Path to image to segment (TIFF/PNG/JPG). If omitted, built-in default path is used.")
+    parser.add_argument("-f", "--file", required=False,
+                        help="Path to image to segment (TIFF/PNG/JPG). If omitted, built-in default path is used.")
     parser.add_argument("-b", "--save-merged", action="store_true", help="Save merged boxes file (JSON + CSV).")
-    parser.add_argument("-ba", "--save-all", action="store_true", help="Save both merged boxes and all detected boxes (JSON + CSV).")
-    parser.add_argument("-ab", "--save-merged-boxes-images", action="store_true", help="Save each merged box as a separate image file.")
-    parser.add_argument("-as", "--save-segmentations", action="store_true", help="Save each segmentation as a separate image file (cropped overlay).")
+    parser.add_argument("-ba", "--save-all", action="store_true",
+                        help="Save both merged boxes and all detected boxes (JSON + CSV).")
+    parser.add_argument("-ab", "--save-merged-boxes-images", action="store_true",
+                        help="Save each merged box as a separate image file.")
+    parser.add_argument("-as", "--save-segmentations", action="store_true",
+                        help="Save each segmentation as a separate image file (cropped overlay).")
     parser.add_argument("--tile-size", type=int, default=2048, help="Tile size for detection (default: 2048).")
     parser.add_argument("--overlap", type=int, default=1024, help="Tile overlap (default: 1024).")
+    parser.add_argument("-o", "--output", type=str, default=None, help="Output filepath.")
+
     args = parser.parse_args()
 
     default_image_path = Path("../preprocessedData_v1/tissue_regions/1M01/tissue_region_0.tiff")
@@ -434,9 +443,13 @@ def main():
         logger.error(f"Input file does not exist: {image_path}")
         return
 
-    out_root = image_path.parent
     basename = image_path.stem
-    output_dir = out_root / f"{basename}_outputs"
+    if args.output:
+        output_dir = Path(args.output) / f"{image_path.stem}_outputs"
+    else:
+        output_dir = image_path.parent / f"{image_path.stem}_outputs"
+
+    output_dir.mkdir(parents=True, exist_ok=True)
     output_dir.mkdir(parents=True, exist_ok=True)
 
     logger.info(f"Loading detection model...")
@@ -533,6 +546,8 @@ def main():
     logger.info(f"Saved final segmented image: {segmented_path}")
 
     logger.info("All operations completed successfully.")
+    logger.info(f"Output directory: {output_dir}")
+
 
 if __name__ == "__main__":
     main()
