@@ -191,6 +191,21 @@ Some boxes at image edges may produce empty crops; the script logs and skips the
 
 ---
 
+## Sample Outputs
+
+![seg_00015](finalPipeline/tissue_region_0_outputs/segmentations/seg_00015.png)
+
+
+![seg_0004](finalPipeline/tissue_region_0_outputs/segmentations/seg_00004.png)
+
+
+![seg_0050](finalPipeline/tissue_region_0_outputs/segmentations/seg_00050.png)
+
+
+![seg_0043](finalPipeline/tissue_region_0_outputs/segmentations/seg_00043.png)
+
+---
+
 ## Potential Improvements
 
 - `--conf-thresh` argument to set YOLO confidence threshold from CLI.
